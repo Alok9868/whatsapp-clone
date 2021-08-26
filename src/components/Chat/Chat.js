@@ -1,5 +1,5 @@
 import { Avatar } from '@material-ui/core';
-import { SearchOutlined, SettingsSystemDaydreamRounded } from "@material-ui/icons";
+import {  SearchOutlined} from "@material-ui/icons";
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import React, { useState ,useEffect } from 'react'
@@ -12,21 +12,21 @@ import firebase from "firebase";
 import MicIcon from '@material-ui/icons/Mic';
 import SendIcon from '@material-ui/icons/Send';
 import { useParams } from 'react-router';
-import db from './firebase';
-import { useStateValue } from './StateProvider';
+import db from '../firebase/firebase';
 import cookie from 'react-cookies';
-import ScrollToBottom from 'react-scroll-to-bottom';
 import { useRef } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import LongMenufriend from '../Menu/Menufriend';
+
+
 export default function Chat() {
     const [input,setInput]=useState("");
     const userid=cookie.load("userid");
     const [photoURL,setPhotoURL]=useState("");
-    // const name=cookie.load("displayName");
     const {roomId}=useParams();
     const [name,setName]=useState("");
-    // const [seed,setSeed]=useState("");
     const [messages,setMessages]=useState([]);
-    // const [{user} ,dispatch]=useStateValue();
+    const [status,setStatus]=useState("");
     var friend=useRef("");
     const m="last message ";
     const scrollRef = useRef();
@@ -55,33 +55,23 @@ export default function Chat() {
                             snapshot.docs.map((doc)=>{
                                 setPhotoURL(doc.data().photoURL);
                                 setName(doc.data().name);
+                                setStatus(doc.data().status);
                             })
                         }
                     })
                 }
                 
             })
-            
-            
-
-
-
-
         }
-    },[roomId]);
-    // useEffect(() => {
-       
-    // }, [])
-    
-    
-    // useEffect(() => {
-    //     setSeed(Math.floor(Math.random()*100));
-        
-    // }, [roomId])
-
+    },[userid,roomId]);
     const  sendmessage =async(e)=>
     {
         e.preventDefault();
+        if(input==="")
+        {
+            return;
+        }
+        
         db.collection("chats").doc(roomId).collection("messages").add({
             message:input,
             senderid:userid,
@@ -92,17 +82,15 @@ export default function Chat() {
     
     return (
         <div className="chat">
-       <div className="chat_header">
-            <Avatar src={photoURL }/>
+       <div className="chat_header"  >
+            <Avatar src={photoURL } alt=""/>
         <div className="chat_headerInfo">
-        <h3>{name}</h3>
-        <p> {""}
+        <h3>{name.charAt(0).toUpperCase() + name.slice(1)}</h3>
+        <p> 
         {
             messages.length>=1? m+ new Date(messages[messages.length - 1]?.timestamp?.toDate()).toLocaleString() 
                 : "No message yet"
         }
-        
-        
         </p>
         </div>
 <div className="chat_headerRight">
@@ -113,7 +101,12 @@ export default function Chat() {
     <AttachFileIcon/>
     </IconButton>
     <IconButton>
-    <MoreVertIcon />
+    <LongMenufriend
+    photoURL={photoURL}
+    name={name}
+    status={status}
+    roomId={roomId}
+    />
     </IconButton>
 </div>
 </div>
@@ -123,13 +116,12 @@ export default function Chat() {
     return message.senderid!==userid? 
      <div ref={scrollRef}>
         <Chatmessage 
-    // name={message.name}
     timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
     message={message.message}
     />
     </div> : <div ref={scrollRef}> 
     <Chatmessagerecieve
-    // name={message.name}
+
     timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
     message={message.message}
     /></div>

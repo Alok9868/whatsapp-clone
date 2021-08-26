@@ -48,3 +48,6 @@
     background-color: white;
     overflow: scroll;
 }
+.small{
+    height: 10vh  !important;
+}

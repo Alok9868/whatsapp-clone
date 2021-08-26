@@ -6,7 +6,7 @@
 }
 a{
     text-decoration: none !important;
-    color: black;
+    color: black !important;
 }
 .sidebarChat:hover{
     background-color: #ebebeb;

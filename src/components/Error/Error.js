@@ -1,9 +1,8 @@
 import React from 'react'
-
-export default function Register() {
+export default function Error() {
     return (
         <div>
-            register
+            ERROR 404
         </div>
     )
 }
