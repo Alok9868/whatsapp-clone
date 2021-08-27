@@ -10,6 +10,9 @@ import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
 import { useEffect ,useRef } from 'react';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./Menuuser.css";
+
 const ITEM_HEIGHT = 48;
 function Example() {
     const [smShow, setSmShow] = useState(false);
@@ -58,7 +61,7 @@ function Example() {
     }
     return (
       <>
-        <Button onClick={() => setSmShow(true)}>Profile</Button>
+        <button onClick={() => setSmShow(true)}  >Profile</button>
         <Modal
           animation={false}
           size="lg"
@@ -125,7 +128,7 @@ export default function LongMenu() {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: '15ch',
           },
         }}
       >
@@ -134,7 +137,7 @@ export default function LongMenu() {
           </MenuItem>
           <MenuItem onClick={handleClose} >
           <a href="http://localhost:3000/" onClick={Logout} >
-            Log out
+               Log out
           </a>
           </MenuItem>
         

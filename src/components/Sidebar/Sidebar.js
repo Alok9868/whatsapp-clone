@@ -11,14 +11,15 @@ import { useState ,useEffect } from 'react';
 import cookie from "react-cookies";
 import SendIcon from '@material-ui/icons/Send';
 import Loader from "../Loader/Loader";
-import Button from "@restart/ui/esm/Button";
+import { Button } from '@material-ui/core';
 import Modal from 'react-bootstrap/Modal'
 import LongMenu from "../Menu/Menuuser";
 import { storage } from '../firebase/firebase';
 export default function Sidebar() {
     const [loader,setLoader]=useState(false);
     const userid=cookie.load("userid");
-  const photoURL=cookie.load("photoURL");
+  // const photoURL=cookie.load("photoURL");
+  const [photoURL,setPhotoURL]=useState("");
   const displayName=cookie.load("displayName");
   const [searchName,setsearchName]=useState("");
   const [users,setUsers]=useState([]);
@@ -39,13 +40,20 @@ export default function Sidebar() {
     //  return unsubscribe();
     
    },[userid])
-    function Search(searchName)
+   useEffect(() => {
+   const unsubscribe=db.collection('users')
+   .where('userid','==',userid)
+   .onSnapshot((snapshot)=>{
+     setPhotoURL(snapshot.docs[0].data().photoURL);
+   })
+   }, [userid]);
+    function Search()
     {
        db.collection('users').where('name','==',searchName)
        .onSnapshot((snapshot)=>{
          if(snapshot.empty)
          {
-           console.log("No user found");
+           alert("No user found");
          }
          else{
            var friendid;
@@ -128,6 +136,36 @@ export default function Sidebar() {
           console.log(err);
         });
     };
+    function handleKeyDown()
+    {
+      db.collection('users').where('name','==',searchName)
+       .onSnapshot((snapshot)=>{
+         if(snapshot.empty)
+         {
+           alert("No user found");
+         }
+         else{
+           var friendid;
+           friendid=snapshot.docs[0].data().userid;
+           db.collection('chats')
+           .where('members','array-contains-any',[userid,searchName])
+           .onSnapshot((snapshot)=>{
+             if(snapshot.empty)
+             {
+              db.collection('chats').add({
+                members:[userid,friendid]
+              })
+             }
+             else
+             {
+            
+              alert("Chat already exists");
+             }         
+         })
+        }
+      })
+       setsearchName("");
+      }
 
       
     return ( 
@@ -173,12 +211,14 @@ export default function Sidebar() {
             </div>
             <div className="sidebar_search">
                 <div className="sidebar_searchContainer">
-                    <SearchOutlined />
+                    <Button onClick={Search } ><SearchOutlined /> </Button>
                     <input placeholder="Search for friends" 
                     type="text"  
                     value={searchName} 
-                    onChange={(e)=>{setsearchName(e.target.value)}}/>
-                    <button onClick={()=>{Search(searchName) }} type="submit">Search</button>
+                    onChange={(e)=>{setsearchName(e.target.value)}}
+                    onKeyDown={(e)=>{if(e.key==='Enter'){ handleKeyDown() }   }}
+                    />
+                    {/* <Button onClick={()=>{Search(searchName) }} type="submit">Search</Button> */}
                 </div>
             </div>
             <div className="sidebar_chats">

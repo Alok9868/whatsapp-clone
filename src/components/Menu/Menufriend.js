@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
+import "./Menufriend.css"
 const ITEM_HEIGHT = 48;
 function Example({photoURL,name,status}) {
     const [smShow, setSmShow] = useState(false);
@@ -17,7 +18,7 @@ function Example({photoURL,name,status}) {
     }
     return (
       <>
-        <Button onClick={() => setSmShow(true)}>Show Profile</Button>
+        <button onClick={() => setSmShow(true)}>Show Profile</button>
         <Modal
           size="lg"
           show={smShow}
@@ -98,7 +99,7 @@ export default function LongMenufriend({name,photoURL,status,roomId}) {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: '20ch',
+            width: '15ch',
           },
         }}
       >

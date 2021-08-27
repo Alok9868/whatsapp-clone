@@ -20,6 +20,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import EmojiEmotionsOutlinedIcon from '@material-ui/icons/EmojiEmotionsOutlined';
 import { storage } from '../firebase/firebase';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import { Button } from '@material-ui/core';
 // function Example() {
 //     const [smShow, setSmShow] = useState(false);
 //     const photoURL=cookie.load("photoURL");
@@ -205,14 +206,16 @@ const onImageChange = (e) => {
         </p>
         </div>
 <div className="chat_headerRight">
-<IconButton>
-    <SearchOutlined />
-    </IconButton>
+{/* <IconButton> */}
+    {/* <SearchOutlined /> */}
+    {/* </IconButton> */}
     <IconButton>
      {  show ? <>
      <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }} />
-     <button onClick={uploadToFirebase}><CloudUploadIcon /> </button> 
-     </> : <AttachFileIcon onClick={()=>{setShow(true)}}/>
+     <Button onClick={uploadToFirebase}><CloudUploadIcon /> </Button>
+     <CloseIcon onClick={()=>{setShow(false)}}/> 
+     </> 
+     : <AttachFileIcon onClick={()=>{setShow(true)}}/>
      }
     </IconButton>
     <IconButton>
@@ -251,9 +254,9 @@ const onImageChange = (e) => {
       <Emoji 
      setEmoji={setEmoji}   
     />
-    <CloseIcon onClick={()=>{setEmojiTemplate(false)}}/>
+    <Button><CloseIcon onClick={()=>{setEmojiTemplate(false)}}/></Button>
     </>
-    : <EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/>
+    : <Button><EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/></Button>
     }
     <form className="last"> 
       {
