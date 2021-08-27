@@ -10,13 +10,14 @@ import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
 import { useEffect ,useRef } from 'react';
-import { Redirect } from "react-router-dom";
 const ITEM_HEIGHT = 48;
 function Example() {
     const [smShow, setSmShow] = useState(false);
     const userid=cookie.load("userid");
     const photoURL=cookie.load("photoURL");
     const displayName=cookie.load("displayName");
+    const [status,setStatus]=useState(cookie.load("status"));
+    // console.log("example");
     const docid = useRef("");
     useEffect(() => {
       if(userid!==undefined)
@@ -24,24 +25,23 @@ function Example() {
         db.collection('users')
       .where('userid','==',userid)
       .onSnapshot((snapshot)=>{
-        snapshot.docs.map((doc)=>{
+       
+        snapshot.docs.forEach((doc)=>{
           docid.current= doc.id
-          console.log(doc.id);
-        })})
+          // console.log(doc.id);
+        }    )  })   
       }
       else{
         
       }
     }, [userid])
-    // const status=cookie.load("status");
-    const [status,setStatus]=useState(cookie.load("status"));
     function handleChange(event) {
         const value=event.target.value;
         setStatus(value);
     }
     function close()
     {
-      setSmShow(false) 
+      setSmShow(false) ;
     }
     function submit() {
                     db.collection('users').doc(docid.current)
@@ -55,11 +55,10 @@ function Example() {
                         console.log(err);
                     })
                     close();
-        
     }
     return (
       <>
-        <Button onClick={() => setSmShow(true)}>Profile</Button>{' '}
+        <Button onClick={() => setSmShow(true)}>Profile</Button>
         <Modal
           animation={false}
           size="lg"
@@ -81,7 +80,7 @@ function Example() {
            <Button className="btn btn-secondary close" variant="primary" onClick={close}>
             Close
             </Button>
-           <Button className="btn btn-secondary save-changes" variant="secondary" onClick={submit}>
+           <Button className="btn btn-secondary " variant="secondary" onClick={submit}>
              Save
          </Button>
         </Modal>

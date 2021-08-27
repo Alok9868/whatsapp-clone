@@ -23,10 +23,6 @@ export default function Login() {
             const photoURL=result.user.photoURL;
             cookie.save("userid",user,{path:'/'});
             cookie.save('displayName',name,{path :'/'});
-            dispatch({
-                type:actionTypes.SET_USER,
-                user:result.user,
-            });
             db.collection('users')
             .where('userid','==',user)
             .onSnapshot((snapshot)=>{
@@ -52,11 +48,15 @@ export default function Login() {
                 }
                 else
                 {
-                    snapshot.docs.map((doc)=>{
+                    snapshot.docs.forEach((doc)=>{
                         cookie.save('photoURL',doc.data().photoURL,{path:'/'});
                         cookie.save('status',doc.data().status,{path:'/'});
                     });
                 }
+                dispatch({
+                    type:actionTypes.SET_USER,
+                    user:result.user,
+                });
             })
         })
         .catch((error)=>console.log(error.message))

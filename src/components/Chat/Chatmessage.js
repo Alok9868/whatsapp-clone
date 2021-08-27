@@ -5,7 +5,8 @@ export default function Chatmessage(props)
 {
    
 
-    return    <p className="chat_message">
+    return   <div>
+    <p className="chat_message">
     {/* <span className="chat_name">{props.name}</span> */}
     {props.message}
     <span className="chat_timestamp">
@@ -14,4 +15,5 @@ export default function Chatmessage(props)
         }
     </span>
     </p>
+    </div>
 }

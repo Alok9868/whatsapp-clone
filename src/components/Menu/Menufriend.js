@@ -3,18 +3,18 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import cookie from "react-cookies";
 import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
-import { useEffect ,useRef } from 'react';
-import { func } from 'prop-types';
-import { doc, deleteDoc } from "firebase/firestore";
 const ITEM_HEIGHT = 48;
 function Example({photoURL,name,status}) {
     const [smShow, setSmShow] = useState(false);
+    function close()
+    {
+      setSmShow(false) ;
+    }
     return (
       <>
         <Button onClick={() => setSmShow(true)}>Show Profile</Button>
@@ -31,6 +31,9 @@ function Example({photoURL,name,status}) {
             <h4>{status}</h4>
            </div>
            </Modal.Body>
+           <Button className="btn btn-secondary close" variant="primary" onClick={close}>
+            Close
+            </Button>
         </Modal>
       </>
     );
@@ -48,15 +51,28 @@ export default function LongMenufriend({name,photoURL,status,roomId}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  // function clearCollection(roomId) {
+  //  
+  // }
   function clearchat()
   {
-      db.collection('chats').doc(roomId)
-      .onSnapshot((snapshot)=>{
-          if(snapshot)
-          {
-              console.log(snapshot);
-          }
+    const ref=db.collection('chats')
+    .doc(roomId)
+    .collection('messages');
+    ref.get()
+      .then((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+         ref.doc(doc.id).delete()
+          .then(()=>{
+            console.log("deleted successfully");
+          })
+          .catch((err)=>{
+            console.log("error");
+          })
+        })
       })
+      setAnchorEl(null);
+      return ;
 
 
   }

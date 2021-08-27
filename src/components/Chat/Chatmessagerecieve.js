@@ -2,7 +2,8 @@ import React from "react";
 export default function Chatmessagerecieve (props)
 {
 
-    return <p className="chat_message chat_reciever">
+    return <div>
+    <p className="chat_message chat_reciever">
     {/* <span className="chat_name">{props.name}</span> */}
    {props.message}
     <span className="chat_timestamp">
@@ -11,6 +12,7 @@ export default function Chatmessagerecieve (props)
         }
     </span>
     </p>
+    </div>
 
 
 

@@ -10,13 +10,14 @@ function  SidebarChat({id,user}) {
     const userid=cookie.load("userid");
     const [photoURL,setPhotoURL]=useState("");
     const [name,setName]=useState("");
+
        
     useEffect(()=>
     {
+      
          if(id)
         
         {
-          
           var friendid=user.data().members.filter((u)=>{return u!==userid })
           // console.log(friendid[0]);
           db.collection("users")
@@ -24,7 +25,7 @@ function  SidebarChat({id,user}) {
           .onSnapshot((snapshot)=>{
             if(snapshot)
             {
-              (snapshot.docs.map((doc)=>{
+              (snapshot.docs.forEach((doc)=>{
                 setPhotoURL(doc.data().photoURL);
                 setName(doc.data().name)
               }))
@@ -44,9 +45,9 @@ function  SidebarChat({id,user}) {
                 return doc.data();
               }))
             })
+            // return unsubscribe();
         }
     },[id,userid,user])
-
 
     return  (
         <Link to={`/whatsapp/rooms/${id}`}>
