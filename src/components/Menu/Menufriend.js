@@ -55,9 +55,9 @@ export default function LongMenufriend({name,photoURL,status,roomId}) {
   // function clearCollection(roomId) {
   //  
   // }
-  function clearchat()
+  async function clearchat()
   {
-    const ref=db.collection('chats')
+    const ref= await db.collection('chats')
     .doc(roomId)
     .collection('messages');
     ref.get()

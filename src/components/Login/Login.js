@@ -7,9 +7,7 @@ import {useStateValue} from "C:/Users/Alok/Desktop/whatsapp-clone-firebase/src/S
 import cookie from 'react-cookies'
 import { Redirect } from "react-router-dom";
 import db from '../firebase/firebase';
-import { useState } from 'react';
 export default function Login() {
-    console.log("asdf");
     // eslint-disable-next-line
     const [{user}, dispatch]=useStateValue();
     const userid=cookie.load("userid");

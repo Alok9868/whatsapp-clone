@@ -21,26 +21,9 @@ import EmojiEmotionsOutlinedIcon from '@material-ui/icons/EmojiEmotionsOutlined'
 import { storage } from '../firebase/firebase';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Button } from '@material-ui/core';
-// function Example() {
-//     const [smShow, setSmShow] = useState(false);
-//     const photoURL=cookie.load("photoURL");
-//     return ( <>
-      
-//       <div >
-//         {/* <Button onClick={() => setSmShow(true)}>Small modal</Button>{' '} */}
-//         <Avatar src={photoURL}   onClick={() => setSmShow(true)}/>
-//         <Modal
-//           size="sm"
-//           show={smShow}
-//           onHide={() => setSmShow(false)}
-//           aria-labelledby="example-modal-sizes-title-sm"
-//         >
-//           <Modal.Body> <img src={photoURL} alt="no match" ></img>    </Modal.Body>
-//         </Modal>
-//       </div>
-//       </>
-//     );
-//   }
+import { PhotoCamera } from '@material-ui/icons';
+import AlertDismissible from '../Alerts/Alert';
+
 export default function Chat() {
     const [input,setInput]=useState("");
     const userid=cookie.load("userid");
@@ -51,52 +34,46 @@ export default function Chat() {
     const [status,setStatus]=useState(cookie.load("status"));
     const [emojiTemplate,setEmojiTemplate]=useState(false);
     const [show,setShow]=useState(false);
-    const [showimage,setShowimage]=useState(false);
-    // var friend=useRef("");
-    const [friend,setFriend]=useState("");
+    const [img,setImg]=useState("");
+    const [showfile,setShowfile]=useState(false);
+    const [file,setFile]=useState(null);
     const m="last message ";
   const [image,setImage]=useState(null);
-  const [allImages, setImages] = useState([]);
     const scrollRef = useRef();
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior:"smooth"});
     }, [messages])
-    useEffect(()=>
+    useEffect(  ()=>
     {
-        if(roomId){
-            db.collection("chats").doc(roomId).collection("messages").orderBy
-            ("timestamp","asc").onSnapshot(snapshot=>
-                (
-                    setMessages(snapshot.docs.map(doc=> doc.data()))
-                ))
-            db.collection("chats").doc(roomId)
-            .onSnapshot((snapshot)=>{
-                if(snapshot.data() )
-                {
-                    // console.log(snapshot.data());
-                    const  temp=(snapshot.data().members.filter((u)=>{return u!==userid}));
-                    // console.log(friend.current[0]);
-                    // console.log(temp);
-                    setFriend(temp[0]);
-                    // console.log(friend);
-                    db.collection('users')
-                    .where('userid','==',temp[0])
-                    .onSnapshot((snapshot)=>{
-                        if(snapshot)
-                        {
-                            snapshot.docs.forEach((doc)=>{
-                                // console.log(doc.data().photoURL);
-                                setPhotoURL(doc.data().photoURL);
-                                setName(doc.data().name);
-                                setStatus(doc.data().status);
-                            })
-                        }
-                    })
-                }
-                
-            })
-        }
+         db.collection("chats").doc(roomId).collection("messages").orderBy
+        ("timestamp","asc").onSnapshot(snapshot=>
+            (
+              setMessages(snapshot.docs.map(doc=> doc.data()))
+            ) 
+            )
     },[roomId]);
+    useEffect( () => {
+         db.collection("chats").doc(roomId)
+        .onSnapshot((snapshot)=>{
+            if(snapshot.data())
+            {
+                const  temp=(snapshot.data().members.filter((u)=>{return u!==userid}));
+                db.collection('users')
+                .where('userid','==',temp[0])
+                .onSnapshot((snapshot)=>{
+                    if(snapshot)
+                    {
+                        snapshot.docs.forEach((doc)=>{
+                            setPhotoURL(doc.data().photoURL);
+                            setName(doc.data().name);
+                            setStatus(doc.data().status);
+                        })
+                    }
+                })
+            }
+        })
+
+    }, [roomId])
     const  sendmessage =async(e)=>
     {
         e.preventDefault();
@@ -105,12 +82,12 @@ export default function Chat() {
             return;
         }
         
-        db.collection("chats").doc(roomId).collection("messages").add({
+        await db.collection("chats").doc(roomId).collection("messages").add({
             message:input,
             senderid:userid,
             timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+            type:"text"
         })
-        console.log("asdf");
         setInput("");
         setEmojiTemplate(false);
     }
@@ -137,7 +114,7 @@ const onImageChange = (e) => {
       setImage(null);
     }
   };
-  const uploadToFirebase = () => {
+  const uploadToFirebase = async () => {
     //1.
     if (image) {
       //2.
@@ -145,51 +122,69 @@ const onImageChange = (e) => {
       //3.
       const imageRef = storageRef.child(image.name);
       //4.
-      console.log(imageRef);
-      imageRef.put(image)
+      // console.log(imageRef);
+      await imageRef.put(image)
+      imageRef.getDownloadURL()
      //5.
-     .then(() => {
-        alert("Image uploaded successfully .");
+     .then((e) => {
+       db.collection("chats").doc(roomId).collection("messages").add({
+        message:e,
+        senderid:userid,
+        timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+        type:"image",
+        name:image.name
+    })
+        // alert("Image uploaded successfully .");
     });
     } else {
       alert("Please upload an image first.");
     }
     setImage(null);
     setShow(false);
-    // getFromFirebase();
   };
-  const getFromFirebase = () => {
+  const onFileChange = (e) => {
+    const reader = new FileReader();
+    let file = e.target.files[0]; // get the supplied file
+    // if there is a file, set image to that file
+    if (file) {
+      reader.onload = () => {
+        if (reader.readyState === 2) {
+          setFile(file);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    } else {
+      setFile(null);
+    }
+  };
+  const uploadFileToFirebase = async () => {
     //1.
-    let storageRef = storage.ref();
-    //2.
-    storageRef.listAll().then(function (res) {
-        //3.
-        res.items.forEach((imageRef) => {
-          imageRef.getDownloadURL().then((url) => {
-              //4.
-              setImages((allImages) => [...allImages, url]);
-          });
-        });
+    if (file) {
+      console.log(file.name);
+      //2.
+      const storageRef = storage.ref();
+      //3.
+      const FileRef = storageRef.child(file.name);
+      //4.
+      await FileRef.put(file)
+      FileRef.getDownloadURL()
+     //5.
+     .then((e) => {
+        alert("doc uploaded successfully .");
+        db.collection("chats").doc(roomId).collection("messages").add({
+          message:e,
+          senderid:userid,
+          timestamp:firebase.firestore.FieldValue.serverTimestamp(),
+          type:"doc",
+          name:file.name
       })
-      .catch(function (error) {
-        console.log(error);
-      });
+    });
+  setFile(null);
+    } else {
+      alert("Please upload a document first.");
+    }
+    setShowfile(false);
   };
-  const deleteFromFirebase = (url) => {
-    //1.
-    let pictureRef = storage.refFromURL(url);
-   //2.
-    pictureRef.delete()
-      .then(() => {
-        //3.
-        setImages(allImages.filter((image) => image !== url));
-        alert("Picture is deleted successfully!");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
 
     
     return (
@@ -206,18 +201,26 @@ const onImageChange = (e) => {
         </p>
         </div>
 <div className="chat_headerRight">
-{/* <IconButton> */}
-    {/* <SearchOutlined /> */}
-    {/* </IconButton> */}
-    <IconButton>
+
+     
+        {
+          showfile?<> 
+          <input type="file" onChange={(e) => {onFileChange(e); }} />
+     <Button > <CloudUploadIcon  onClick={uploadFileToFirebase}/> </Button>
+     <Button onClick={()=>{setShowfile(false)}}><CloseIcon /> </Button>  
+     </> :
+         <Button> <AttachFileIcon onClick={()=>{setShowfile(true)}}/> </Button>
+        }
+
+
+
      {  show ? <>
-     <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }} />
-     <Button onClick={uploadToFirebase}><CloudUploadIcon /> </Button>
-     <CloseIcon onClick={()=>{setShow(false)}}/> 
+     <input type="file"  accept="image/x-png,image/jpeg"  onChange={(e) => {onImageChange(e); }} />
+     <Button > <CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
+     <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
      </> 
-     : <AttachFileIcon onClick={()=>{setShow(true)}}/>
+     : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
      }
-    </IconButton>
     <IconButton>
     <LongMenufriend
     photoURL={photoURL}
@@ -232,17 +235,20 @@ const onImageChange = (e) => {
     {messages.map(message=>{    
     return message.senderid!==userid? 
      <div ref={scrollRef}>
-        <Chatmessage 
+        <Chatmessage
     timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
     message={message.message}
     key={message.id}
+    type={message.type}
+    name={message.name}
     />
     </div> : <div ref={scrollRef}> 
     <Chatmessagerecieve
-
     timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
     message={message.message}
     key={message.id}
+    type={message.type}
+    name={message.name}
     /></div>
 })
 }    
@@ -259,16 +265,11 @@ const onImageChange = (e) => {
     : <Button><EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/></Button>
     }
     <form className="last"> 
-      {
-        showimage ? <div>
-            <img src={image}  alt="file format not supported"/>
-        </div> 
-        : <input 
+         <input 
         value={input}
         onChange={(e)=>setInput(e.target.value)}
          placeholder="Type a message"
           type="text" />
-      }
       <button onClick={sendmessage}type="submit"><SendIcon /></button>
     </form>
     {/* <MicIcon /> */}

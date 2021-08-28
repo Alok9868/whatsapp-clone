@@ -15,6 +15,10 @@ import { Button } from '@material-ui/core';
 import Modal from 'react-bootstrap/Modal'
 import LongMenu from "../Menu/Menuuser";
 import { storage } from '../firebase/firebase';
+import AlertDismissible from '../Alerts/Alert';
+import { PhotoCamera } from '@material-ui/icons';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import CloseIcon from '@material-ui/icons/Close';
 export default function Sidebar() {
     const [loader,setLoader]=useState(false);
     const userid=cookie.load("userid");
@@ -26,6 +30,9 @@ export default function Sidebar() {
   const [smShow, setSmShow] = useState(false);
   const [image,setImage]=useState(null);
   const [allImages, setImages] = useState([]);
+  const [state,setState]=useState(false);
+  const [alertmessage,setAlertmessage]=useState("");
+  const [show,setShow]=useState(false);
 
   useEffect(() => {
     setLoader(true);
@@ -46,109 +53,29 @@ export default function Sidebar() {
    .onSnapshot((snapshot)=>{
      setPhotoURL(snapshot.docs[0].data().photoURL);
    })
+  //  return unsubscribe();
    }, [userid]);
     function Search()
     {
-       db.collection('users').where('name','==',searchName)
-       .onSnapshot((snapshot)=>{
-         if(snapshot.empty)
-         {
-           alert("No user found");
-         }
-         else{
-           var friendid;
-           snapshot.docs.forEach((doc)=>{
-             friendid=doc.data().userid;
-            //  console.log(friendid);
-           })
-           db.collection('chats').add({
-             members:[userid,friendid]
-           })
-         }
-       })
-       setsearchName("");
-    }
-    const onImageChange = (e) => {
-      const reader = new FileReader();
-      let file = e.target.files[0]; // get the supplied file
-      // if there is a file, set image to that file
-      if (file) {
-        reader.onload = () => {
-          if (reader.readyState === 2) {
-            console.log(file);
-            setImage(file);
-          }
-        };
-        reader.readAsDataURL(e.target.files[0]);
-      // if there is no file, set image back to null
-      } else {
-        setImage(null);
+
+      if(searchName===displayName)
+      {
+           setAlertmessage("You cannot chat withYourself");
+           setState(true);
+           return;
       }
-    };
-    const uploadToFirebase = () => {
-      //1.
-      if (image) {
-        //2.
-        const storageRef = storage.ref();
-        //3.
-        const imageRef = storageRef.child(image.name);
-        //4.
-        console.log(imageRef);
-        imageRef.put(image)
-       //5.
-       .then(() => {
-          alert("Image uploaded successfully to Firebase.");
-      });
-      } else {
-        alert("Please upload an image first.");
-      }
-      setImage(null);
-      getFromFirebase();
-    };
-    const getFromFirebase = () => {
-      //1.
-      let storageRef = storage.ref();
-      //2.
-      storageRef.listAll().then(function (res) {
-          //3.
-          res.items.forEach((imageRef) => {
-            imageRef.getDownloadURL().then((url) => {
-                //4.
-                setImages((allImages) => [...allImages, url]);
-            });
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-    const deleteFromFirebase = (url) => {
-      //1.
-      let pictureRef = storage.refFromURL(url);
-     //2.
-      pictureRef.delete()
-        .then(() => {
-          //3.
-          setImages(allImages.filter((image) => image !== url));
-          alert("Picture is deleted successfully!");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    function handleKeyDown()
-    {
       db.collection('users').where('name','==',searchName)
        .onSnapshot((snapshot)=>{
          if(snapshot.empty)
          {
-           alert("No user found");
+           setAlertmessage("No user found");
+           setState(true);
          }
          else{
            var friendid;
            friendid=snapshot.docs[0].data().userid;
            db.collection('chats')
-           .where('members','array-contains-any',[userid,searchName])
+           .where('members','array-contains',[userid,friendid])
            .onSnapshot((snapshot)=>{
              if(snapshot.empty)
              {
@@ -158,16 +85,81 @@ export default function Sidebar() {
              }
              else
              {
-            
-              alert("Chat already exists");
+               console.log(snapshot);
+              setAlertmessage("Chat Already exists");
+              setState(true);
              }         
          })
         }
       })
        setsearchName("");
+    }
+    function setfn()
+    {
+      setState(false);
+    }
+    const onImageChange = (e) => {
+      const reader = new FileReader();
+      let file = e.target.files[0]; // get the supplied file
+      // if there is a file, set image to that file
+      if (file) {
+        reader.onload = () => {
+          if (reader.readyState === 2) {
+          //   console.log(file);
+            setImage(file);
+          //   setShowimage(true);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+       
+      // if there is no file, set image back to null
+      } else {
+        setImage(null);
       }
-
-      
+    };
+    const uploadToFirebase = async () => {
+      //1.
+      if (image) {
+        //2.
+        const storageRef = storage.ref();
+        //3.
+        const imageRef = storageRef.child(image.name);
+        //4.
+        // console.log(imageRef);
+        await imageRef.put(image)
+        imageRef.getDownloadURL()
+       //5.
+       .then((e) => {
+        //  setPhotoURL(e);
+         db.collection('users')
+         .where('userid','==',userid)
+        .get()
+         .then((snapshot)=>{
+           console.log(snapshot.docs[0].id);
+           db.collection('users').doc(snapshot.docs[0].id)
+           .update({
+             photoURL:e
+           })
+           .then(()=>{
+           console.log("successfully updated");
+           })
+           .catch((e)=>{
+             console.log(e);
+           })
+         })
+         .catch((e)=>{
+           console.log("error");
+         })
+          alert("Image uploaded successfully .");
+      });
+      } else {
+        alert("Please upload an image first.");
+      }
+      setImage(null);
+      setShow(false);
+      // getFromFirebase();
+    };
+    
     return ( 
          loader ? <Loader />  : <div className="sidebar">
             <div className="sidebar_header">
@@ -178,23 +170,24 @@ export default function Sidebar() {
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Body> <img src={photoURL} alt="no match" ></img></Modal.Body>
+        <Modal.Body> <img height="200" width="200" src={photoURL} alt="no match" ></img>
+        {  show ? <>
+     <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }} />
+     <Button  ><CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
+     <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
+     </> 
+     : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
+     }
+        
+        </Modal.Body>
       </Modal>
-      {/* <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }}/>
-      <div id="photos">
-     {allImages.map((image) => {
-        return (
-           <div key={image} className="image">
-              <img src={image} alt="" />
-              <button onClick={() => deleteFromFirebase(image)}>
-               Delete
-              </button>
-           </div>
-         );
-     })}
-</div>
-          <button onClick={uploadToFirebase}>Upload to Firebase</button> */}
-            <div className="sidebar_headerRight">
+      {  state ?  <AlertDismissible 
+                  message={alertmessage}
+                  setfn={setfn}
+                  state={true}
+                />  :" "   }
+
+        <div className="sidebar_headerRight">
             <h2>{displayName.charAt(0).toUpperCase() + displayName.slice(1)}</h2>
             {/* <IconButton>
             <DonutLargeIcon />
@@ -216,16 +209,13 @@ export default function Sidebar() {
                     type="text"  
                     value={searchName} 
                     onChange={(e)=>{setsearchName(e.target.value)}}
-                    onKeyDown={(e)=>{if(e.key==='Enter'){ handleKeyDown() }   }}
+                    onKeyDown={(e)=>{if(e.key==='Enter'){ Search() }   }}
                     />
-                    {/* <Button onClick={()=>{Search(searchName) }} type="submit">Search</Button> */}
                 </div>
+
+               
             </div>
             <div className="sidebar_chats">
-            {/* <SidebarChat 
-                addnewChat={true}
-            /> */}
-
             {users.map(user =>
             <SidebarChat 
               id={user.id}
