@@ -24,3 +24,30 @@ button:hover {
     text-shadow: 0px 0px 0px transparent;
 
 }
+
+.flex-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 70px;
+}
+
+.status-center{
+    text-align: center;
+}
+.st-control{
+    width: 300px;
+    height: 60px;
+}
+.close{
+    position: absolute;
+    bottom: 5px;
+    left: 290px;
+}
+.menufriend-img{
+    height: 200px;
+}
+.modal-content{
+    position: relative !important;
+}

@@ -57,9 +57,9 @@ function  SidebarChat({id,user}) {
                 <h2>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
                 {
                     messages[0]?.type==='image'? <PhotoIcon />
-                  : messages[0]?.type==="doc" ? <Description/>  :<p>{messages[0]?.message} </p>
+                  : messages[0]?.type==="doc" ? <Description/>  :<span>{messages[0]?.message.substring(0,40)} </span>
                 }
-                {messages[0]? <p>{new Date(messages[0]?.timestamp?.toDate()).toLocaleString()} </p>: " " }
+                {messages[0]? <p className="smalltime" >{new Date(messages[0]?.timestamp?.toDate()).toLocaleString()} </p>: " " }
             </div>
         </div>
          </Link>

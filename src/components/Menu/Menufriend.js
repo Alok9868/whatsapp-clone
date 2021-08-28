@@ -3,12 +3,12 @@ import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
 import "./Menufriend.css"
+import { storage } from '../firebase/firebase';
 const ITEM_HEIGHT = 48;
 function Example({photoURL,name,status}) {
     const [smShow, setSmShow] = useState(false);
@@ -26,10 +26,10 @@ function Example({photoURL,name,status}) {
           aria-labelledby="example-modal-sizes-title-lg"
         >
           <Modal.Body>
-           <img src={photoURL} alt="img"></img>    
+           <img src={photoURL} alt="img" className="menufriend-img"></img>    
            <div>
-            <h2>{name}</h2>
-            <h4>{status}</h4>
+            <h2 className="status-center">{name}</h2>
+            <h4 className="status-center st-control">{status}</h4>
            </div>
            </Modal.Body>
            <Button className="btn btn-secondary close" variant="primary" onClick={close}>
@@ -43,7 +43,6 @@ function Example({photoURL,name,status}) {
 export default function LongMenufriend({name,photoURL,status,roomId}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  let history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,23 +51,41 @@ export default function LongMenufriend({name,photoURL,status,roomId}) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // function clearCollection(roomId) {
-  //  
-  // }
+ 
   async function clearchat()
   {
     const ref= await db.collection('chats')
     .doc(roomId)
     .collection('messages');
-    ref.get()
+       await ref.get()
       .then((snapshot) => {
         snapshot.docs.forEach((doc) => {
-         ref.doc(doc.id).delete()
+           ref.doc(doc.id)
+         .get()
+         .then((snapshot)=>{
+           if(snapshot.exists && (snapshot.data().type==="image"||snapshot.data().type==="doc"))
+           {
+             console.log(snapshot.data())
+            storage.refFromURL(snapshot.data().message)
+            .delete()
+            .then(()=>{
+              console.log("Successfully deleted")
+            })
+            .catch((err)=>{
+              console.log(err);
+            })
+           }
+         })
+         .catch((err)=>{
+           console.log(err);
+         })
+          ref.doc(doc.id)
+         .delete()
           .then(()=>{
             console.log("deleted successfully");
           })
           .catch((err)=>{
-            console.log("error");
+            console.log(err);
           })
         })
       })

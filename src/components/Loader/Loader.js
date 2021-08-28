@@ -17,15 +17,3 @@ export default class App extends React.Component {
     );
   }
 }
-// function Loader() {
-//   return (
-//     <div className="cl100">
-//      <div class="d-flex justify-content-center margin100" >
-//   <div class="spinner-border" role="status">
-//     <span class="visually-hidden">Loading...</span>
-//   </div>
-//     LOADING
-// </div>
-//     </div>
-//   );
-// }

@@ -24,3 +24,48 @@ button:hover {
     text-shadow: 0px 0px 0px transparent;
 
 }
+.flex-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 30px;
+}
+.status-head{
+    height: 30px;
+    width: 100px;
+    position: relative;
+    bottom: 15px;
+    font-size: large;
+    font-weight: 700;
+}
+.status-input{
+    padding: 5px;
+    border: none;
+    resize: none;
+    margin-left: -30px;
+}
+
+.btn{
+    width: 100px !important;
+}
+.btn:hover{
+    background-color: dodgerblue !important;
+}
+.b-flex{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+    padding: 10px;
+}
+.state-us-div{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.status-img{
+    height: 200px;
+
+}

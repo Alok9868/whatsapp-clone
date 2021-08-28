@@ -22,21 +22,19 @@ import CloseIcon from '@material-ui/icons/Close';
 export default function Sidebar() {
     const [loader,setLoader]=useState(false);
     const userid=cookie.load("userid");
-  // const photoURL=cookie.load("photoURL");
   const [photoURL,setPhotoURL]=useState("");
   const displayName=cookie.load("displayName");
   const [searchName,setsearchName]=useState("");
   const [users,setUsers]=useState([]);
   const [smShow, setSmShow] = useState(false);
   const [image,setImage]=useState(null);
-  const [allImages, setImages] = useState([]);
   const [state,setState]=useState(false);
   const [alertmessage,setAlertmessage]=useState("");
   const [show,setShow]=useState(false);
 
   useEffect(() => {
     setLoader(true);
-    const unsubscribe=  db.collection('chats')
+    db.collection('chats')
    .where('members','array-contains',userid)
    .onSnapshot((snapshot)=>{
      setUsers(snapshot.docs.map((doc)=>{
@@ -44,16 +42,14 @@ export default function Sidebar() {
        }))
        setLoader(false);
      })
-    //  return unsubscribe();
     
    },[userid])
    useEffect(() => {
-   const unsubscribe=db.collection('users')
+   db.collection('users')
    .where('userid','==',userid)
    .onSnapshot((snapshot)=>{
      setPhotoURL(snapshot.docs[0].data().photoURL);
    })
-  //  return unsubscribe();
    }, [userid]);
     function Search()
     {
@@ -157,7 +153,6 @@ export default function Sidebar() {
       }
       setImage(null);
       setShow(false);
-      // getFromFirebase();
     };
     
     return ( 
@@ -170,7 +165,7 @@ export default function Sidebar() {
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Body> <img height="200" width="200" src={photoURL} alt="no match" ></img>
+        <Modal.Body> <img className="profile-size" height="200" width="200" src={photoURL} alt="no match" ></img>
         {  show ? <>
      <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }} />
      <Button  ><CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
@@ -204,9 +199,10 @@ export default function Sidebar() {
             </div>
             <div className="sidebar_search">
                 <div className="sidebar_searchContainer">
-                    <Button onClick={Search } ><SearchOutlined /> </Button>
+                    <Button onClick={Search } className="search-button"><SearchOutlined /> </Button>
                     <input placeholder="Search for friends" 
                     type="text"  
+                    className="search-input-field" 
                     value={searchName} 
                     onChange={(e)=>{setsearchName(e.target.value)}}
                     onKeyDown={(e)=>{if(e.key==='Enter'){ Search() }   }}

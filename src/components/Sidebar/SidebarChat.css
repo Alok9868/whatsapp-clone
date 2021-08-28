@@ -3,6 +3,8 @@
     padding: 20px;
     cursor: pointer;
     border-bottom: 1px solid #f6f6f6;
+    height: 90px;
+    overflow: hidden;
 }
 a{
     text-decoration: none !important;
@@ -18,7 +20,6 @@ a{
 .sidebarChat_info{
     margin-left: 15px;
 }
-.modal-content{
-    height: 500px;
-    width: 400px;
-  }
+.smalltime{
+    font-size: 10px;
+}

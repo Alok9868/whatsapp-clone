@@ -17,6 +17,9 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloseIcon from '@material-ui/icons/Close';
 import { storage } from '../firebase/firebase';
 
+import EmojiEmotionsOutlinedIcon from '@material-ui/icons/EmojiEmotionsOutlined';
+import Emoji from "../Emoji/Emoji";
+import { func } from 'prop-types';
 const ITEM_HEIGHT = 48;
 function Example() {
     const [smShow, setSmShow] = useState(false);
@@ -27,6 +30,7 @@ function Example() {
     const [status,setStatus]=useState(cookie.load("status"));
     const [show,setShow]=useState(false);
   const [image,setImage]=useState(null);
+  const [emojiTemplate,setEmojiTemplate]=useState(false);
     // console.log("example");
     const docid = useRef("");
     useEffect(() => {
@@ -42,7 +46,7 @@ function Example() {
       }
     }, [userid])
     useEffect(() => {
-      const unsubscribe=db.collection('users')
+      db.collection('users')
       .where('userid','==',userid)
       .onSnapshot((snapshot)=>{
         setPhotoURL(snapshot.docs[0].data().photoURL);
@@ -50,13 +54,11 @@ function Example() {
       // return unsubscribe();
     }, [userid])
     
-    function handleChange(event) {
-        const value=event.target.value;
-        setStatus(value);
-    }
+  
     function close()
     {
       setSmShow(false) ;
+      setEmojiTemplate(false);
     }
     function submit() {
                     db.collection('users').doc(docid.current)
@@ -70,6 +72,7 @@ function Example() {
                         console.log(err);
                     })
                     close();
+                    setEmojiTemplate(false);
     }
     const uploadToFirebase = async () => {
       //1.
@@ -132,6 +135,14 @@ function Example() {
         setImage(null);
       }
     };
+    function setEmoji(Emoji)
+    {
+      setStatus((status+ Emoji).slice(0,30));
+    }
+    function handleChange(event) {
+      const value=event.target.value;
+      setStatus(value.slice(0,30));
+  }
     return (
       <>
         <button onClick={() => setSmShow(true)}  >Profile</button>
@@ -142,8 +153,8 @@ function Example() {
           onHide={() => setSmShow(false)}
           aria-labelledby="example-modal-sizes-title-lg"
         >
-          <Modal.Body>
-           <img height="150" width="150" src={photoURL} alt="img"></img>  
+          <Modal.Body className="flex-box">
+           <img height="150" width="150" className="status-img" src={photoURL} alt="img"></img>  
            {  show ? <>
      <input type="file"  onChange={(e) => {onImageChange(e); }} />
      <Button  ><CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
@@ -151,21 +162,40 @@ function Example() {
      </> 
      : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
      }  
-           <div>
+
             <h2>{displayName}</h2>
-            <input
-                name="title"
-                onChange={handleChange}
-                value={status}
-            />
+            <div className="state-us-div">
+            <div className="status-head">Status :</div>
+            <textarea 
+              name="status" 
+              onChange={handleChange}
+              value={status}
+              className="status-input" 
+              cols="25" 
+              rows="2">
+              </textarea>
+              <p>
+              {status.length}/"30"
+              </p>
+               {
+                  emojiTemplate ? <>
+                  <Emoji 
+                setEmoji={setEmoji}   
+                />
+                <Button><CloseIcon onClick={()=>{setEmojiTemplate(false)}}/></Button>
+                </>
+                : <Button><EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/></Button>
+                }
            </div>
            </Modal.Body>
-           <Button className="btn btn-secondary close" variant="primary" onClick={close}>
-            Close
+           <div className="b-flex">
+           <Button className="btn btn-secondary " variant="primary" onClick={submit}>
+            Save
             </Button>
-           <Button className="btn btn-secondary " variant="secondary" onClick={submit}>
-             Save
+           <Button className="btn btn-secondary close" variant="secondary" onClick={close}>
+            Close
          </Button>
+         </div>
         </Modal>
       </>
     );
@@ -174,7 +204,6 @@ function Example() {
 export default function LongMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  let history = useHistory();
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

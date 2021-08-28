@@ -1,7 +1,5 @@
 import { Avatar } from '@material-ui/core';
-import {  SearchOutlined} from "@material-ui/icons";
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import React, { useState ,useEffect } from 'react'
 import { IconButton } from '@material-ui/core';
 import "./Chat.css";
@@ -14,7 +12,6 @@ import db from '../firebase/firebase';
 import cookie from 'react-cookies';
 import { useRef } from 'react';
 import LongMenufriend from '../Menu/Menufriend';
-import Modal from 'react-bootstrap/Modal'
 import Emoji from "../Emoji/Emoji";
 import CloseIcon from '@material-ui/icons/Close';
 import EmojiEmotionsOutlinedIcon from '@material-ui/icons/EmojiEmotionsOutlined';
@@ -23,6 +20,7 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Button } from '@material-ui/core';
 import { PhotoCamera } from '@material-ui/icons';
 import AlertDismissible from '../Alerts/Alert';
+import Loader from "react-js-loader";
 
 export default function Chat() {
     const [input,setInput]=useState("");
@@ -34,11 +32,11 @@ export default function Chat() {
     const [status,setStatus]=useState(cookie.load("status"));
     const [emojiTemplate,setEmojiTemplate]=useState(false);
     const [show,setShow]=useState(false);
-    const [img,setImg]=useState("");
     const [showfile,setShowfile]=useState(false);
     const [file,setFile]=useState(null);
     const m="last message ";
   const [image,setImage]=useState(null);
+  const [loader,setLoader]=useState(false);
     const scrollRef = useRef();
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior:"smooth"});
@@ -118,13 +116,16 @@ const onImageChange = (e) => {
     //1.
     if (image) {
       //2.
+      setLoader(true);
       const storageRef = storage.ref();
       //3.
       const imageRef = storageRef.child(image.name);
       //4.
       // console.log(imageRef);
       await imageRef.put(image)
+      setLoader(false);
       imageRef.getDownloadURL()
+
      //5.
      .then((e) => {
        db.collection("chats").doc(roomId).collection("messages").add({
@@ -162,15 +163,17 @@ const onImageChange = (e) => {
     if (file) {
       console.log(file.name);
       //2.
+      setLoader(true);
       const storageRef = storage.ref();
       //3.
       const FileRef = storageRef.child(file.name);
       //4.
       await FileRef.put(file)
+      setLoader(false);
       FileRef.getDownloadURL()
      //5.
      .then((e) => {
-        alert("doc uploaded successfully .");
+        // alert("doc uploaded successfully .");
         db.collection("chats").doc(roomId).collection("messages").add({
           message:e,
           senderid:userid,
@@ -199,27 +202,30 @@ const onImageChange = (e) => {
                 : "No message yet"
         }
         </p>
+        {
+          loader? <Loader  type="bubble-ping" bgColor={"cyan"} /> : " "
+        }
         </div>
 <div className="chat_headerRight">
 
      
         {
           showfile?<> 
-          <input type="file" onChange={(e) => {onFileChange(e); }} />
+          <input type="file" className="file-upload" onChange={(e) => {onFileChange(e); }} />
      <Button > <CloudUploadIcon  onClick={uploadFileToFirebase}/> </Button>
      <Button onClick={()=>{setShowfile(false)}}><CloseIcon /> </Button>  
      </> :
-         <Button> <AttachFileIcon onClick={()=>{setShowfile(true)}}/> </Button>
+         <Button> <AttachFileIcon className="attach-file" onClick={()=>{setShowfile(true)}}/> </Button>
         }
 
 
 
      {  show ? <>
-     <input type="file"  accept="image/x-png,image/jpeg"  onChange={(e) => {onImageChange(e); }} />
-     <Button > <CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
+     <input type="file"  accept="image/x-png,image/jpeg" className="file-upload"  onChange={(e) => {onImageChange(e); }} />
+     <Button onClick={uploadToFirebase} > <CloudUploadIcon  /> </Button>
      <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
      </> 
-     : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
+     : <Button onClick={()=>{setShow(true)}}><PhotoCamera className="attach-file" /></Button> 
      }
     <IconButton>
     <LongMenufriend
@@ -260,13 +266,14 @@ const onImageChange = (e) => {
       <Emoji 
      setEmoji={setEmoji}   
     />
-    <Button><CloseIcon onClick={()=>{setEmojiTemplate(false)}}/></Button>
+    <Button onClick={()=>{setEmojiTemplate(false)}}><CloseIcon /></Button>
     </>
-    : <Button><EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/></Button>
+    : <Button onClick={()=>{setEmojiTemplate(true)}} ><EmojiEmotionsOutlinedIcon /></Button>
     }
     <form className="last"> 
          <input 
         value={input}
+        className="type-msg"
         onChange={(e)=>setInput(e.target.value)}
          placeholder="Type a message"
           type="text" />
