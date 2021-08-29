@@ -195,7 +195,7 @@ const onImageChange = (e) => {
        <div className="chat_header"  >
             <Avatar src={photoURL } alt="" />
         <div className="chat_headerInfo">
-        <h3>{name.charAt(0).toUpperCase() + name.slice(1)}</h3>
+        <h3>{name}</h3>
         <p> 
         {
             messages.length>=1? m+ new Date(messages[messages.length - 1]?.timestamp?.toDate()).toLocaleString() 

@@ -1,15 +1,11 @@
 import React from 'react';
 import "./Sidebar.css";
 import db from '../firebase/firebase';
-import ChatIcon from '@material-ui/icons/Chat';
-import DonutLargeIcon from "@material-ui/icons/DonutLarge";
-import { IconButton ,Avatar} from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { Avatar} from '@material-ui/core';
 import { SearchOutlined } from "@material-ui/icons";
 import SidebarChat from './SidebarChat';
 import { useState ,useEffect } from 'react';
 import cookie from "react-cookies";
-import SendIcon from '@material-ui/icons/Send';
 import Loader from "../Loader/Loader";
 import { Button } from '@material-ui/core';
 import Modal from 'react-bootstrap/Modal'
@@ -31,6 +27,7 @@ export default function Sidebar() {
   const [state,setState]=useState(false);
   const [alertmessage,setAlertmessage]=useState("");
   const [show,setShow]=useState(false);
+  var friendid;
 
   useEffect(() => {
     setLoader(true);
@@ -51,7 +48,20 @@ export default function Sidebar() {
      setPhotoURL(snapshot.docs[0].data().photoURL);
    })
    }, [userid]);
-    function Search()
+  //  async function  searchfriend(id)
+  //  {
+  //    await db.collection('chats')
+  //    .doc(id)
+  //    .get()
+  //    .then((snapshot)=>{
+  //     const found=snapshot.data().members.find( id=> friendid===id);
+  //      if(found!==undefined)
+  //      {
+  //        checkchat=true;
+  //      }
+  //    })
+  //  }
+    async function Search()
     {
 
       if(searchName===displayName)
@@ -60,36 +70,45 @@ export default function Sidebar() {
            setState(true);
            return;
       }
-      db.collection('users').where('name','==',searchName)
+
+       db.collection('users').where('name','==',searchName)
        .onSnapshot((snapshot)=>{
          if(snapshot.empty)
          {
            setAlertmessage("No user found");
            setState(true);
+           return;
          }
-         else{
-           var friendid;
+         else
+         {
            friendid=snapshot.docs[0].data().userid;
-           db.collection('chats')
-           .where('members','array-contains',[userid,friendid])
+            db.collection('chats')
+           .where("members",'==',[userid,friendid])
            .onSnapshot((snapshot)=>{
+             console.log(snapshot);
              if(snapshot.empty)
              {
               db.collection('chats').add({
                 members:[userid,friendid]
               })
+              .then(()=>{
+                console.log("successfully added");
+              })
+              .catch((e)=>{
+                console.log(e);
+              })
              }
              else
              {
-               console.log(snapshot);
-              setAlertmessage("Chat Already exists");
-              setState(true);
-             }         
-         })
-        }
-      })
+                alert("Chat already exists");
+             }
+            
+            })
+          }})
        setsearchName("");
     }
+
+    
     function setfn()
     {
       setState(false);
@@ -183,17 +202,7 @@ export default function Sidebar() {
                 />  :" "   }
 
         <div className="sidebar_headerRight">
-            <h2>{displayName.charAt(0).toUpperCase() + displayName.slice(1)}</h2>
-            {/* <IconButton>
-            <DonutLargeIcon />
-            </IconButton>
-            <IconButton>
-            <ChatIcon/>
-            </IconButton> */}
-            {/* <IconButton>
-            <MoreVertIcon  />
-            <Menu />
-            </IconButton> */}
+            <h2>{displayName}</h2>
             <LongMenu />
             </div>
             </div>

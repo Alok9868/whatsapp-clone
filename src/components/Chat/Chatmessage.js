@@ -7,7 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import DescriptionIcon from '@material-ui/icons/Description';
 export default function Chatmessage(props)
 {
-    console.log(props.message);
+    // console.log(props.message);
     const [smShow,setSmShow]=useState(false);
     return   <div>
     <p className="chat_message">

@@ -19,7 +19,6 @@ function  SidebarChat({id,user}) {
         
         {
           var friendid=user.data().members.filter((u)=>{return u!==userid })
-          // console.log(friendid[0]);
           db.collection("users")
           .where('userid','==',friendid[0])
           .onSnapshot((snapshot)=>{
@@ -47,14 +46,14 @@ function  SidebarChat({id,user}) {
             })
             // return unsubscribe();
         }
-    },[])
+    },[id])
 
     return  (
         <Link to={`/whatsapp/rooms/${id}`}>
         <div className="sidebarChat" >
             <Avatar src={photoURL}/>
             <div className="sidebarChat_info ">
-                <h2>{name.charAt(0).toUpperCase() + name.slice(1)}</h2>
+                <h2>{name}</h2>
                 {
                     messages[0]?.type==='image'? <PhotoIcon />
                   : messages[0]?.type==="doc" ? <Description/>  :<span>{messages[0]?.message.substring(0,40)} </span>

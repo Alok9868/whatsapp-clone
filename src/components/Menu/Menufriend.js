@@ -43,7 +43,6 @@ function Example({photoURL,name,status}) {
 export default function LongMenufriend({name,photoURL,status,roomId}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -58,41 +57,20 @@ export default function LongMenufriend({name,photoURL,status,roomId}) {
     .doc(roomId)
     .collection('messages');
        await ref.get()
-      .then((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-           ref.doc(doc.id)
-         .get()
-         .then((snapshot)=>{
-           if(snapshot.exists && (snapshot.data().type==="image"||snapshot.data().type==="doc"))
-           {
-             console.log(snapshot.data())
-            storage.refFromURL(snapshot.data().message)
+        .then((snapshot)=>{
+          snapshot.docs.forEach((doc)=>{
+            ref.doc(doc.id)
             .delete()
             .then(()=>{
-              console.log("Successfully deleted")
+              console.log("successfully deleted");
             })
             .catch((err)=>{
               console.log(err);
             })
-           }
-         })
-         .catch((err)=>{
-           console.log(err);
-         })
-          ref.doc(doc.id)
-         .delete()
-          .then(()=>{
-            console.log("deleted successfully");
-          })
-          .catch((err)=>{
-            console.log(err);
           })
         })
-      })
       setAnchorEl(null);
       return ;
-
-
   }
 
 
