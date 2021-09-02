@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Picker from 'emoji-picker-react';
 import "./Emoji.css"
 export default  function App({setEmoji}) {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
-  const onEmojiClick = (event, emojiObject) => {
-    setChosenEmoji(emojiObject);
+   const onEmojiClick = (event, emojiObject) => {
+
     setEmoji(emojiObject.emoji)
   };
   return (

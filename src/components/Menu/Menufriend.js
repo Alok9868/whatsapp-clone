@@ -8,7 +8,6 @@ import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
 import db from '../firebase/firebase';
 import "./Menufriend.css"
-import { storage } from '../firebase/firebase';
 const ITEM_HEIGHT = 48;
 function Example({photoURL,name,status}) {
     const [smShow, setSmShow] = useState(false);
@@ -25,11 +24,12 @@ function Example({photoURL,name,status}) {
           onHide={() => setSmShow(false)}
           aria-labelledby="example-modal-sizes-title-lg"
         >
-          <Modal.Body>
-           <img src={photoURL} alt="img" className="menufriend-img"></img>    
-           <div>
-            <h2 className="status-center">{name}</h2>
-            <h4 className="status-center st-control">{status}</h4>
+          <Modal.Body className="flex-box">
+           <img src={photoURL} alt="img" className="menufriend-img"></img> 
+           <div className="status-center">{name}</div>   
+           <div className="div-rlative">
+            <div className="status-heading">Status :</div>
+            <div className="st-control">{status}</div>
            </div>
            </Modal.Body>
            <Button className="btn btn-secondary close" variant="primary" onClick={close}>

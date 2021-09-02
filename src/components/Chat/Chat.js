@@ -19,7 +19,6 @@ import { storage } from '../firebase/firebase';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { Button } from '@material-ui/core';
 import { PhotoCamera } from '@material-ui/icons';
-import AlertDismissible from '../Alerts/Alert';
 import Loader from "react-js-loader";
 
 export default function Chat() {
@@ -37,7 +36,7 @@ export default function Chat() {
     const m="last message ";
   const [image,setImage]=useState(null);
   const [loader,setLoader]=useState(false);
-    const scrollRef = useRef();
+    const scrollRef = useRef(null);
     useEffect(() => {
         scrollRef.current?.scrollIntoView({behavior:"smooth"});
     }, [messages])
@@ -203,7 +202,7 @@ const onImageChange = (e) => {
         }
         </p>
         {
-          loader? <Loader  type="bubble-ping" bgColor={"cyan"} /> : " "
+           loader ? <Loader className="file-loader" type="bubble-ping" bgColor={"cyan"} />: " "
         }
         </div>
 <div className="chat_headerRight">
@@ -240,7 +239,7 @@ const onImageChange = (e) => {
 <div className="chat_body"  >
     {messages.map(message=>{    
     return message.senderid!==userid? 
-     <div ref={scrollRef}>
+     <div ref={scrollRef} >
         <Chatmessage
     timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
     message={message.message}
@@ -276,7 +275,7 @@ const onImageChange = (e) => {
         className="type-msg"
         onChange={(e)=>setInput(e.target.value)}
          placeholder="Type a message"
-          type="text" />
+          autoFocus  type="text" />
       <button onClick={sendmessage}type="submit"><SendIcon /></button>
     </form>
     {/* <MicIcon /> */}

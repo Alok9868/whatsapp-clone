@@ -1,6 +1,5 @@
 import firebase from "firebase";
 import "firebase/storage";
-import React from "react";
 const firebaseConfig = {
   apiKey: "AIzaSyDrtRfWNI6PCCfKvln4X1HoRSDjC0YH4ac",
   authDomain: "whatsapp-clone-29961.firebaseapp.com",

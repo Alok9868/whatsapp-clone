@@ -92,5 +92,12 @@ input[type=text] {
     word-break: break-all;
 }
 
+.loader{
+    position: absolute !important;
+    top:40vh !important;
+    right: 30vw !important;
+    z-index: 100;
+}
+
 
 

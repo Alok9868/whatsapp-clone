@@ -1,9 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Modal from 'react-bootstrap/Modal'
-
-import { Button } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import './Chatmessage'
 import DescriptionIcon from '@material-ui/icons/Description';
 export default function Chatmessage(props)
 {
@@ -13,7 +11,7 @@ export default function Chatmessage(props)
     <p className="chat_message">
     {
         props.type ==="image" ?
-         <>
+         <div  className="img-chat">
          <img 
         width="100"
          height="100" 
@@ -27,12 +25,12 @@ export default function Chatmessage(props)
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-sm"
          >
-        <Modal.Body> <img height="200" width="200" src={props.message} alt="file format not supported" ></img>
-        <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button> 
+        <Modal.Body className="chat-img-body"> <img height="500px" width="500px" src={props.message} alt="file format not supported" ></img>
+        {/* <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button>  */}
         </Modal.Body>
           </Modal> 
          }
-         </> 
+         </div> 
         :  props.type==="doc" ? <> <DescriptionIcon /><div> {props.name} </div> </> : <span>{props.message}</span> 
     }
     <span className="chat_timestamp">

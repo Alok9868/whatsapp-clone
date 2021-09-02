@@ -52,13 +52,14 @@
     padding: 0px !important;
 }
 .modal-content{
-    margin: 130px auto;
-    height: 400px !important;
-    width: 400px !important;
+    margin: 50px auto;
+    height: 500px !important;
+    width: 500px !important;
 }
 .profile-size{
-    height: 400px;
-    width: 400px;
+    height: auto;
+    width: auto;
+    
 } 
 .search-input-field{
     width: 100%;

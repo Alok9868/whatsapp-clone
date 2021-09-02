@@ -33,17 +33,26 @@ button:hover {
 }
 .status-head{
     height: 30px;
-    width: 100px;
+    width: 80px;
     position: relative;
     bottom: 15px;
-    font-size: large;
+    left: 0px;
+    font-size: 20px;
     font-weight: 700;
 }
 .status-input{
     padding: 5px;
     border: none;
     resize: none;
-    margin-left: -30px;
+    outline: none;
+    font-size: 18px;
+    
+}
+.char-length{
+    margin-left: 10px;
+}
+.status-input:focus{
+    outline: 2px solid greenyellow;
 }
 
 .btn{
@@ -62,10 +71,27 @@ button:hover {
 .state-us-div{
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    width: 460px;
 }
 .status-img{
-    height: 200px;
+    height: 250px;
+    border-radius: 50%;
 
+}
+.emoji-div{
+    width: 60px;
+    height: 60px;
+}
+.my-flex{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
+.input-file{
+    height: 40px;
+    width: 100px;
+    margin-top: 10px;
 }

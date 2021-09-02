@@ -4,7 +4,6 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import cookie from "react-cookies";
-import { useHistory } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Modal from 'react-bootstrap/Modal'
 import { useState } from 'react';
@@ -19,19 +18,16 @@ import { storage } from '../firebase/firebase';
 
 import EmojiEmotionsOutlinedIcon from '@material-ui/icons/EmojiEmotionsOutlined';
 import Emoji from "../Emoji/Emoji";
-import { func } from 'prop-types';
 const ITEM_HEIGHT = 48;
 function Example() {
     const [smShow, setSmShow] = useState(false);
     const userid=cookie.load("userid");
     const [photoURL,setPhotoURL]=useState("");
-    // const photoURL=cookie.load("photoURL");
     const displayName=cookie.load("displayName");
     const [status,setStatus]=useState(cookie.load("status"));
     const [show,setShow]=useState(false);
   const [image,setImage]=useState(null);
   const [emojiTemplate,setEmojiTemplate]=useState(false);
-    // console.log("example");
     const docid = useRef("");
     useEffect(() => {
       if(userid!==undefined)
@@ -137,11 +133,11 @@ function Example() {
     };
     function setEmoji(Emoji)
     {
-      setStatus((status+ Emoji).slice(0,30));
+      setStatus((status+ Emoji).slice(0,42));
     }
     function handleChange(event) {
       const value=event.target.value;
-      setStatus(value.slice(0,30));
+      setStatus(value.slice(0,42));
   }
     return (
       <>
@@ -154,16 +150,18 @@ function Example() {
           aria-labelledby="example-modal-sizes-title-lg"
         >
           <Modal.Body className="flex-box">
-           <img height="150" width="150" className="status-img" src={photoURL} alt="img"></img>  
+           <img className="status-img" src={photoURL} alt="img"></img>  
            {  show ? <>
-     <input type="file"  onChange={(e) => {onImageChange(e); }} />
+     <div className="my-flex">
+     <input type="file" accept="image/x-png,image/jpeg" className="input-file" onChange={(e) => {onImageChange(e); }} />
      <Button  ><CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
      <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
+     </div>
      </> 
      : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
      }  
 
-            <h2>{displayName}</h2>
+            <h1>{displayName}</h1>
             <div className="state-us-div">
             <div className="status-head">Status :</div>
             <textarea 
@@ -171,12 +169,13 @@ function Example() {
               onChange={handleChange}
               value={status}
               className="status-input" 
-              cols="25" 
+              cols="34" 
               rows="2">
               </textarea>
-              <p>
-              {status.length}/"30"
-              </p>
+              <div className="emoji-div">
+              <div className="char-length">
+              {status.length}/42
+              </div>
                {
                   emojiTemplate ? <>
                   <Emoji 
@@ -186,15 +185,17 @@ function Example() {
                 </>
                 : <Button><EmojiEmotionsOutlinedIcon onClick={()=>{setEmojiTemplate(true)}}/></Button>
                 }
+              </div>
            </div>
            </Modal.Body>
            <div className="b-flex">
            <Button className="btn btn-secondary " variant="primary" onClick={submit}>
             Save
             </Button>
-           <Button className="btn btn-secondary close" variant="secondary" onClick={close}>
+            
+           {/* <Button className="btn btn-secondary close" variant="secondary" onClick={close}>
             Close
-         </Button>
+         </Button> */}
          </div>
         </Modal>
       </>

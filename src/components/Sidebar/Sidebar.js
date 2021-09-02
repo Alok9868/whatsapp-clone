@@ -184,14 +184,14 @@ export default function Sidebar() {
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Body> <img className="profile-size" height="200" width="200" src={photoURL} alt="no match" ></img>
-        {  show ? <>
+        <Modal.Body> <img className="profile-size"  src={photoURL} alt="no match" ></img>
+        {/* {  show ? <>
      <input type="file" accept="image/x-png,image/jpeg" onChange={(e) => {onImageChange(e); }} />
      <Button  ><CloudUploadIcon  onClick={uploadToFirebase}/> </Button>
      <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
      </> 
      : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
-     }
+     } */}
         
         </Modal.Body>
       </Modal>

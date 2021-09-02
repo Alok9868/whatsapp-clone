@@ -2,8 +2,8 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import "./login.css"
 import { auth, provider } from '../firebase/firebase'
-import { actionTypes } from 'C:/Users/Alok/Desktop/whatsapp-clone-firebase/src/reducer';
-import {useStateValue} from "C:/Users/Alok/Desktop/whatsapp-clone-firebase/src/StateProvider";
+import { actionTypes } from '../../reducer';
+import {useStateValue} from "../../StateProvider";
 import cookie from 'react-cookies'
 import { Redirect } from "react-router-dom";
 import db from '../firebase/firebase';
@@ -70,7 +70,7 @@ export default function Login() {
                 <div className="login_text">
                     <h1>Sign in to Whatsapp </h1>
                 </div>
-                <Button  onClick={signin}>
+                <Button  onClick={signin} >
                     Sign in with Google
                 </Button>
             </div>

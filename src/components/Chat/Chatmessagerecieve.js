@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import Modal from 'react-bootstrap/Modal'
-
-import { Button } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import './Chatmessagerecieve'
 import DescriptionIcon from '@material-ui/icons/Description';
 export default function Chatmessagerecieve (props)
 {
@@ -10,7 +8,7 @@ export default function Chatmessagerecieve (props)
     return <div>
     <p className="chat_message chat_reciever">
     {
-          props.type ==="image" ? <>
+          props.type ==="image" ? <div className="img-chat">
           <img 
           width="100" 
           height="100" 
@@ -19,16 +17,16 @@ export default function Chatmessagerecieve (props)
            onClick={()=>{setSmShow(true)}}
            />
           <Modal
-        size="sm"
+        size="lg"
         show={smShow}
         onHide={() => setSmShow(false)}
-        aria-labelledby="example-modal-sizes-title-sm"
+        aria-labelledby="example-modal-sizes-title-lg"
       >
-        <Modal.Body> <img height="200" width="200" src={props.message} alt="no match" ></img>
-        <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button> 
+        <Modal.Body className="second-body"> <img height="500px" width="500px" src={props.message} alt="no match" ></img>
+        {/* <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button>  */}
         </Modal.Body>
         </Modal>
-        </>
+        </div>
           : props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span>{props.message}</span>  
     }
     <span className="chat_timestamp">
