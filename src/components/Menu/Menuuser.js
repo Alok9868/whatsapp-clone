@@ -158,7 +158,7 @@ function Example() {
      <Button onClick={()=>{setShow(false)}}><CloseIcon /> </Button>  
      </div>
      </> 
-     : <Button><PhotoCamera  onClick={()=>{setShow(true)}}/></Button> 
+     : <Button  onClick={()=>{setShow(true)}}><PhotoCamera /></Button> 
      }  
 
             <h1>{displayName}</h1>
@@ -193,9 +193,6 @@ function Example() {
             Save
             </Button>
             
-           {/* <Button className="btn btn-secondary close" variant="secondary" onClick={close}>
-            Close
-         </Button> */}
          </div>
         </Modal>
       </>
@@ -246,7 +243,8 @@ export default function LongMenu() {
             <Example />
           </MenuItem>
           <MenuItem onClick={handleClose} >
-          <a href="http://localhost:3000/" onClick={Logout} >
+    
+          <a href="https://whatsapp-clone-29961.web.app" onClick={Logout} >
                Log out
           </a>
           </MenuItem>
