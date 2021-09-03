@@ -5,7 +5,6 @@ import "./SidebarChat.css";
 import {Link } from "react-router-dom";
 import cookie from "react-cookies"
 import PhotoIcon from '@material-ui/icons/Photo';
-
 import Description from '@material-ui/icons/Description';
 function  SidebarChat({id,user}) {
     const [messages,setMessages]=useState([]);

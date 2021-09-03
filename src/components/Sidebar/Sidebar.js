@@ -12,9 +12,6 @@ import Modal from 'react-bootstrap/Modal'
 import LongMenu from "../Menu/Menuuser";
 import { storage } from '../firebase/firebase';
 import AlertDismissible from '../Alerts/Alert';
-import { PhotoCamera } from '@material-ui/icons';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import CloseIcon from '@material-ui/icons/Close';
 export default function Sidebar() {
     const [loader,setLoader]=useState(false);
     const userid=cookie.load("userid");
@@ -48,19 +45,6 @@ export default function Sidebar() {
      setPhotoURL(snapshot.docs[0].data().photoURL);
    })
    }, [userid]);
-  //  async function  searchfriend(id)
-  //  {
-  //    await db.collection('chats')
-  //    .doc(id)
-  //    .get()
-  //    .then((snapshot)=>{
-  //     const found=snapshot.data().members.find( id=> friendid===id);
-  //      if(found!==undefined)
-  //      {
-  //        checkchat=true;
-  //      }
-  //    })
-  //  }
     async function Search()
     {
 
