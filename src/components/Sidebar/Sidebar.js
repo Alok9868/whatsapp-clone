@@ -66,8 +66,8 @@ export default function Sidebar() {
 
       if(searchName===displayName)
       {
-           setAlertmessage("You cannot chat withYourself");
-           setState(true);
+           alert("You cannot chat withYourself");
+          //  setState(true);
            return;
       }
 
@@ -75,8 +75,8 @@ export default function Sidebar() {
        .onSnapshot((snapshot)=>{
          if(snapshot.empty)
          {
-           setAlertmessage("No user found");
-           setState(true);
+           alert("No user found");
+          //  setState(true);
            return;
          }
          else
