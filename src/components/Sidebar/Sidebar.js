@@ -109,7 +109,7 @@ export default function Sidebar() {
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-sm"
       >
-        <Modal.Body> <img className="profile-size"  src={photoURL} alt="no match" ></img>
+        <Modal.Body> <img  height="500" width="500" src={photoURL} alt="no match" ></img>
        
         
         </Modal.Body>
