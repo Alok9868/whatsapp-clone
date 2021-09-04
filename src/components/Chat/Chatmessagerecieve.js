@@ -22,7 +22,7 @@ export default function Chatmessagerecieve (props)
         onHide={() => setSmShow(false)}
         aria-labelledby="example-modal-sizes-title-lg"
       >
-        <Modal.Body className="second-body"> <img height="500px" width="500px" src={props.message} alt="no match" ></img>
+        <Modal.Body className="second-body"> <img height="500px" width="500px" src={props.message} alt="file format not supported" ></img>
         {/* <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button>  */}
         </Modal.Body>
         </Modal>

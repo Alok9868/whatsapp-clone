@@ -20,10 +20,10 @@ export default function Chatmessage(props)
          onClick={()=>{setSmShow(true)}}
          />
          { <Modal
-        size="sm"
+        size="lg"
         show={smShow}
         onHide={() => setSmShow(false)}
-        aria-labelledby="example-modal-sizes-title-sm"
+        aria-labelledby="example-modal-sizes-title-lg"
          >
         <Modal.Body className="chat-img-body"> <img height="500px" width="500px" src={props.message} alt="file format not supported" ></img>
         {/* <Button onClick={()=>{setSmShow(false)}}><CloseIcon /> </Button>  */}
@@ -31,8 +31,10 @@ export default function Chatmessage(props)
           </Modal> 
          }
          </div> 
-        :  props.type==="doc" ? <> <DescriptionIcon /><div> {props.name} </div> </> : <span>{props.message}</span> 
+        :  props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span>{props.message}</span> 
+       
     }
+     {/* <> <DescriptionIcon /><div> {props.name} </div> </> : <span>{props.message}</span>  */}
     <span className="chat_timestamp">
         {
             props.type ==="text"?
