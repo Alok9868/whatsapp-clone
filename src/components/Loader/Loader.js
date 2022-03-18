@@ -6,6 +6,7 @@ export default class App extends React.Component {
   //other logic
   render() {
     return (
+      <div>
       <Loader
         type="Puff"
         color="#00BFFF"
@@ -13,6 +14,7 @@ export default class App extends React.Component {
         width={100}
         timeout={10000} //3 secs
       />
+      </div>
     );
   }
 }

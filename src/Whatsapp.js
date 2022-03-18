@@ -7,6 +7,8 @@ import {
 import React from 'react'
 import Sidebar from './components/Sidebar/Sidebar';
 import Chat from './components/Chat/Chat';
+import NoChat from './components/NoChat/NoChat';
+
 export default function Whatsapp() {
     return (
         <Router>
@@ -16,7 +18,8 @@ export default function Whatsapp() {
           <Chat />
         </Route>
         <Route   exact path="/whatsapp">
-          {<h1>Click on the Chat to show</h1>}
+          {/* {<h1>Click on the Chat to show</h1>} */}
+          <NoChat />
         </Route>
         </Switch>
         </Router>

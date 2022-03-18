@@ -11,6 +11,7 @@ export default function Login() {
     // eslint-disable-next-line
     const [{user}, dispatch]=useStateValue();
     const userid=cookie.load("userid");
+    // console.log(userid);
     const signin =()=>
     {
         auth
@@ -34,7 +35,7 @@ export default function Login() {
                       status:"Hey there I am using Whatsapp"
                     })
                     .then((ref)=>{
-                    //   console.log(ref);
+                        
                       console.log("user is added");
                     })
                     .catch(error=>{

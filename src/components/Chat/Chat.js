@@ -21,6 +21,22 @@ import { Button } from '@material-ui/core';
 import { PhotoCamera } from '@material-ui/icons';
 import Loader from "react-js-loader";
 
+
+const getTime = () =>{
+  var today = new Date();
+
+  var time= today.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+ var date = today.getDate()+ "/" + (today.getMonth()+1) + "/" +  today.getFullYear();
+ // var time = today.getHours() + ":" + today.getMinutes();
+ var dateTime = date+','+time;
+
+ return dateTime;
+
+
+};
+
+
+
 export default function Chat() {
     const [input,setInput]=useState("");
     const userid=cookie.load("userid");
@@ -71,7 +87,7 @@ export default function Chat() {
         })
 
     }, [roomId])
-    const  sendmessage =async(e)=>
+     const  sendmessage =async(e)=>
     {
         e.preventDefault();
         if(input==="")
@@ -79,13 +95,16 @@ export default function Chat() {
             return;
         }
         
+        setInput("");
+        
+        const dateTime = getTime();
         await db.collection("chats").doc(roomId).collection("messages").add({
             message:input,
             senderid:userid,
             timestamp:firebase.firestore.FieldValue.serverTimestamp(),
-            type:"text"
+            type:"text",
+            time:dateTime
         })
-        setInput("");
         setEmojiTemplate(false);
     }
     function setEmoji(Emoji)
@@ -116,6 +135,7 @@ const onImageChange = (e) => {
     if (image) {
       //2.
       setLoader(true);
+      const dateTime = getTime();
       const storageRef = storage.ref();
       //3.
       const imageRef = storageRef.child(image.name);
@@ -126,13 +146,15 @@ const onImageChange = (e) => {
       imageRef.getDownloadURL()
 
      //5.
+     
      .then((e) => {
        db.collection("chats").doc(roomId).collection("messages").add({
         message:e,
         senderid:userid,
         timestamp:firebase.firestore.FieldValue.serverTimestamp(),
         type:"image",
-        name:image.name
+        name:image.name,
+        time:dateTime
     })
         // alert("Image uploaded successfully .");
     });
@@ -161,6 +183,7 @@ const onImageChange = (e) => {
     //1.
     if (file) {
       console.log(file.name);
+      const dateTime = getTime();
       //2.
       setLoader(true);
       const storageRef = storage.ref();
@@ -178,7 +201,8 @@ const onImageChange = (e) => {
           senderid:userid,
           timestamp:firebase.firestore.FieldValue.serverTimestamp(),
           type:"doc",
-          name:file.name
+          name:file.name,
+          time:dateTime
       })
     });
   setFile(null);
@@ -197,12 +221,12 @@ const onImageChange = (e) => {
         <h3>{name}</h3>
         <p> 
         {
-            messages.length>=1? m+ new Date(messages[messages.length - 1]?.timestamp?.toDate()).toLocaleString() 
+            messages.length>=1? m+ messages[messages.length - 1].time 
                 : "No message yet"
         }
         </p>
         {
-           loader ? <Loader className="file-loader" type="bubble-ping" bgColor={"cyan"} />: " "
+           loader ? <div><Loader className="file-loader" type="bubble-ping" bgColor={"cyan"} />  </div>     : " "
         }
         </div>
 <div className="chat_headerRight">
@@ -241,7 +265,7 @@ const onImageChange = (e) => {
     return message.senderid!==userid? 
      <div ref={scrollRef} >
         <Chatmessage
-    timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
+    timestamp={message.time}
     message={message.message}
     key={message.id}
     type={message.type}
@@ -249,7 +273,7 @@ const onImageChange = (e) => {
     />
     </div> : <div ref={scrollRef}> 
     <Chatmessagerecieve
-    timestamp={new Date(message.timestamp?.toDate()).toLocaleString()}
+    timestamp={message.time}
     message={message.message}
     key={message.id}
     type={message.type}

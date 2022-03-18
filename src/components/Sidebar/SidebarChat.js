@@ -15,7 +15,6 @@ function  SidebarChat({id,user}) {
     {
       
          if(id)
-        
         {
           var friendid=user.data().members.filter((u)=>{return u!==userid })
           db.collection("users")
@@ -55,9 +54,9 @@ function  SidebarChat({id,user}) {
                 <h2>{name}</h2>
                 {
                     messages[0]?.type==='image'? <PhotoIcon />
-                  : messages[0]?.type==="doc" ? <Description/>  :<span>{messages[0]?.message.substring(0,40)} </span>
+                  : messages[0]?.type==="doc" ? <Description/>  :<span>{ messages[0]?.message.substring(0,40)} </span>
                 }
-                {messages[0]? <p className="smalltime" >{new Date(messages[0]?.timestamp?.toDate()).toLocaleString()} </p>: " " }
+                {messages[0]? <p className="smalltime" >{ messages[0]?.time} </p>: " " }
             </div>
         </div>
          </Link>
