@@ -10,7 +10,6 @@ import Loader from "../Loader/Loader";
 import { Button } from '@material-ui/core';
 import Modal from 'react-bootstrap/Modal'
 import LongMenu from "../Menu/Menuuser";
-import { storage } from '../firebase/firebase';
 import AlertDismissible from '../Alerts/Alert';
 export default function Sidebar() {
   const [loader, setLoader] = useState(false);
@@ -98,7 +97,9 @@ export default function Sidebar() {
   return (
     loader ? <Loader /> : <div className="sidebar">
       <div className="sidebar_header">
+       <div  style={{cursor:'pointer !important'}}>
         <Avatar src={photoURL} alt="no image" onClick={() => { setSmShow(true) }} />
+        </div>
         <Modal
           size="sm"
           show={smShow}

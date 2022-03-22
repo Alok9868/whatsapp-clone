@@ -144,7 +144,6 @@ const onImageChange = (e) => {
       await imageRef.put(image)
       setLoader(false);
       imageRef.getDownloadURL()
-
      //5.
      
      .then((e) => {
@@ -226,7 +225,7 @@ const onImageChange = (e) => {
         }
         </p>
         {
-           loader ? <div><Loader className="file-loader" type="bubble-ping" bgColor={"cyan"} />  </div>     : " "
+           loader ? <div><Loader type="bubble-ping" bgColor={"cyan"} /><div className="uploading-msg">Uploading...</div> </div>     : " "
         }
         </div>
 <div className="chat_headerRight">

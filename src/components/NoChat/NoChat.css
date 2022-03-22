@@ -1,0 +1,15 @@
+.noChat{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgb(20,178,110);
+    background: linear-gradient(90deg, rgba(20,178,110,1) 0%, rgb(112, 243, 162) 100%, rgba(0,255,119,1) 100%);
+font-family: Georgia, serif;
+font-size: 26px !important;
+color:white;
+width: 70%;
+}
+.noChat-icon{
+    font-size:10vw !important;
+}

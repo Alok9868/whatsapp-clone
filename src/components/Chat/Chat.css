@@ -1,7 +1,8 @@
 .chat{
     display: flex;
     flex-direction: column;
-    flex: 0.80 ;
+    /* flex: 0.80 ; */
+    width: 70%;
 }
 .chat_header{
     padding: 3px 10px;
@@ -20,9 +21,10 @@
 .chat_headerInfo >p{
     color: gray;
 }
+/* url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png") */
 .chat_body{
     flex: 1;
-    background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+    background-image:url('/src/image/whatsappbackimg.png');
     background-repeat: repeat;
     background-position: center;
     padding: 30px;
@@ -95,7 +97,13 @@ input[type=text] {
 .loader{
     position: absolute !important;
     top:40vh !important;
-    right: 30vw !important;
+    right: 32vw !important;
+    z-index: 100;
+}
+.uploading-msg{
+    position: absolute !important;
+    top:51vh !important;
+    right: 32vw !important;
     z-index: 100;
 }
 
