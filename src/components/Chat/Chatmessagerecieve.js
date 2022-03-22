@@ -27,11 +27,10 @@ export default function Chatmessagerecieve (props)
         </Modal.Body>
         </Modal>
         </div>
-          : props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span>{props.message}</span>  
+          : props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span className="send-msg">{props.message}</span>  
     }
     <span className="chat_timestamp">
-        {
-            props.type ==="text"?
+        {    props.type ==="text"?
             <span>{props.timestamp}</span>
             :<div> {props.timestamp}</div>
         }

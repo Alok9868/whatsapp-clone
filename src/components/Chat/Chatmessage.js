@@ -31,7 +31,7 @@ export default function Chatmessage(props)
           </Modal> 
          }
          </div> 
-        :  props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span>{props.message}</span> 
+        :  props.type==="doc" ? <a target="_blank" href={ props.message} rel="noreferrer"  > <DescriptionIcon /><div > {props.name} </div> </a> : <span className="send-msg">{props.message}</span> 
        
     }
      {/* <> <DescriptionIcon /><div> {props.name} </div> </> : <span>{props.message}</span>  */}

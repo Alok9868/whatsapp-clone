@@ -38,6 +38,7 @@
     border-radius: 10px;
     background-color: #ffffff;
     margin-bottom: 30px;
+    word-break: break-all !important;
 }
 .chat_timestamp{
     margin-left: 10px;
@@ -88,6 +89,10 @@
 .type-msg{
     width: 90% !important;
     margin-right: 15px !important;
+    word-break: break-all;
+}
+.send-msg{
+    word-break: break-all;
 }
 input[type=text] {
     word-wrap: break-word;
